@@ -14,8 +14,9 @@ jobs:
         uses: actions/setup-go@v2.1.3
         with:
           go-version: '1.16.7'
-      - run: go version
-        
+      
+      - name: Confirm Go version
+        run: go version        
 
-      - name: Go Run
+      - name: Execute Go code
         run: go run .
