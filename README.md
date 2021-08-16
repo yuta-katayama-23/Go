@@ -2,6 +2,13 @@
 
 Slack から AWS Chatbot 経由で Lambda 実行をする仕組みを構築した際の Lambda 関数のサンプル
 
+## Go の言語仕様
+
+以下のサイトが分かりやすい<br>
+[他言語プログラマが golang の基本を押さえる為のまとめ](https://qiita.com/tfrcm/items/e2a3d7ce7ab8868e37f7)
+
+- :=<br>変数の宣言＋代入を同時に実行する（変数の宣言を省略している）
+
 ## zip 作成手順
 
 [.zip ファイルアーカイブを使用して Go Lambda 関数をデプロイする](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/golang-package.html)を実施するための手順は以下。
@@ -21,3 +28,13 @@ go build -o main main.go
 ```
 
 zip 作成後は AWS Management console から zip を upload して Deploy をする
+
+## zip 作成時に他の設定ファイルなどを取り込みたい時
+
+以下のように、zip 化する際にその対象のファイルを指定すればよい
+
+```
+C:\Users\user\go\bin\build-lambda-zip.exe -output main.zip main config.yaml
+```
+
+参考：https://stackoverflow.com/questions/56607738/cannot-read-json-file-after-uploading-go-package-into-aws-lambda

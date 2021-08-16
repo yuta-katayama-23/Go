@@ -27,3 +27,6 @@
 # Lambda
 main
 main.zip
+
+# VS Code
+.vscode
