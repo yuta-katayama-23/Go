@@ -4,7 +4,7 @@ Slack から AWS Chatbot 経由で Lambda 実行をする仕組みを構築し�
 
 ## zip 作成手順
 
-[.zip ファイルアーカイブを使用して Go Lambda 関数をデプロイする]()を実施するための手順は以下。
+[.zip ファイルアーカイブを使用して Go Lambda 関数をデプロイする](https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/golang-package.html)を実施するための手順は以下。
 
 ### 1、build-lambda-zip ツールを GitHub からダウンロード
 
