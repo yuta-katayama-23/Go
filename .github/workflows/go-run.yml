@@ -1,6 +1,8 @@
 name: go-run
 
 on:
+  push:
+    branches: [hello-world]
   workflow_dispatch:
 
 jobs:
