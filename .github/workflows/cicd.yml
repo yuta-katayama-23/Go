@@ -50,9 +50,7 @@ jobs:
           name: zip
 
       - name: upload main.zip to s3
-        run: |
-          ls -al
-          aws s3 cp main.zip s3://go-lambda-deploy
+        run: aws s3 cp main.zip s3://go-lambda-deploy
 
       - name: update Lambda function
         run: aws lambda update-function-code --function-name go-lambda --s3-bucket go-lambda-deploy --s3-key main.zip
