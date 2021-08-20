@@ -21,6 +21,7 @@ jobs:
         run: echo "build test"
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
