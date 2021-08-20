@@ -24,7 +24,14 @@ jobs:
         run: GOOS=linux go build lambda.go
 
       - name: create zip
-        run: zip main.zip main config.yaml
+        run: |
+          zip main.zip lambda config.yaml
+          ls -al
+
+      - name: Archive zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: main.zip
 
   deploy:
     needs: build
