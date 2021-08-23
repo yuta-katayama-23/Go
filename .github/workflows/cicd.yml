@@ -26,11 +26,15 @@ jobs:
       - name: create zip
         run: zip main.zip main config.yaml
 
-      - name: Archive zip
-        uses: actions/upload-artifact@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          name: zip
-          path: main.zip
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: upload main.zip to s3
+        run: aws s3 cp main.zip s3://go-lambda-deploy
 
   deploy:
     needs: build
@@ -43,14 +47,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
-
-      - name: download artifact for deploy
-        uses: actions/download-artifact@v2
-        with:
-          name: zip
-
-      - name: upload main.zip to s3
-        run: aws s3 cp main.zip s3://go-lambda-deploy
 
       - name: update Lambda function
         run: aws lambda update-function-code --function-name go-lambda --s3-bucket go-lambda-deploy --s3-key main.zip
