@@ -1,13 +1,6 @@
 ## Lambda by Go
 
-Slack から AWS Chatbot 経由で Lambda 実行をする仕組みを構築した際の Lambda 関数のサンプル
-
-## Go の言語仕様
-
-以下のサイトが分かりやすい<br>
-[他言語プログラマが golang の基本を押さえる為のまとめ](https://qiita.com/tfrcm/items/e2a3d7ce7ab8868e37f7)
-
-- :=<br>変数の宣言＋代入を同時に実行する（変数の宣言を省略している）
+Slack から AWS Chatbot 経由で Lambda 実行をする仕組みを構築した際の Lambda 関数
 
 ## zip 作成手順
 
