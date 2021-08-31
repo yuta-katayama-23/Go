@@ -59,7 +59,7 @@ type Status struct {
 	projectId    int
 	name         string
 	color        string
-	displayOrder string
+	displayOrder int
 }
 
 func HandleRequest(ctx context.Context, event Event) (string, error) {
