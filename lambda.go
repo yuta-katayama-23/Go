@@ -120,9 +120,6 @@ func checkIssueStatus(issueKey string) string {
 	var issue Issue
 	json.Unmarshal(body, &issue)
 
-	fmt.Println("issue.Status.name : ", issue.Status.Name)
-	fmt.Println("issue.Status.id : ", issue.Status.Id)
-
 	if issue.Status.Name != os.Getenv("BACKLOG_ISSUE_STATUS") {
 		fmt.Println("Status Error:", issue.Status.Name)
 		return "Status Error:" + issue.Status.Name
