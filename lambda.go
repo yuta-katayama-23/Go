@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"strings"
 
@@ -33,6 +36,7 @@ type Event struct {
 	Modules      []string `json:"Modules"`
 	SourceBranch string   `json:"SourceBranch"`
 	TargetEnv    string   `json:"TargetEnv"`
+	IssueKey     string   `json:"issueKey"`
 
 	// Cloud Watch Eventsからの実行用
 	Detail Detail `json:"detail"`
@@ -45,30 +49,45 @@ type Detail struct {
 	Title           string   `json:"title"`
 }
 
+type Issue struct {
+	Status Status `json:"status"`
+}
+
+type Status struct {
+	id        string
+	projectId string
+	name      string
+}
+
 func HandleRequest(ctx context.Context, event Event) (string, error) {
 	configor.Load(&Config, "config.yaml")
 
-	var buildProjects []BuildProjects
+	checkResult := checkIssueStatus(event.IssueKey)
+	if checkResult == "ok" {
+		var buildProjects []BuildProjects
 
-	for _, repository := range Config.BuildRepositories {
-		if repository.TargetEnv == event.TargetEnv {
-			buildProjects = repository.BuildProjects
+		for _, repository := range Config.BuildRepositories {
+			if repository.TargetEnv == event.TargetEnv {
+				buildProjects = repository.BuildProjects
+			}
 		}
-	}
 
-	fmt.Println(buildProjects)
+		fmt.Println(buildProjects)
 
-	for _, project := range buildProjects {
-		if contains(event.Modules, project.ModuleName) {
-			fmt.Println(project.ProjectName)
+		for _, project := range buildProjects {
+			if contains(event.Modules, project.ModuleName) {
+				fmt.Println(project.ProjectName)
+			}
 		}
+
+		res, err := slackNotification(event)
+		fmt.Println("res", res)
+		fmt.Println("err", err)
+
+		return fmt.Sprintf("Build Sucess"), nil
+	} else {
+		return fmt.Sprintf("Error %s", checkResult), nil
 	}
-
-	res, err := slackNotification(event)
-	fmt.Println("res", res)
-	fmt.Println("err", err)
-
-	return fmt.Sprintf("Module %s", event.Modules), nil
 }
 
 func contains(s []string, e string) bool {
@@ -78,6 +97,34 @@ func contains(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+func checkIssueStatus(issueKey string) string {
+	reqUrl := "https://" + os.Getenv("BACKLOG_DOMEIN") + ".backlog.com/api/v2/issues/" + issueKey + "?apiKey=" + os.Getenv("BACKLOG_API_KEY")
+
+	resp, err := http.Get(reqUrl)
+	if err != nil {
+		fmt.Println("Request Error:", err)
+		return "Request Error:" + err.Error()
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		fmt.Println("Response Error:", resp.Status)
+		return "Response Error:" + resp.Status
+	}
+	fmt.Printf("%-v", resp)
+
+	body, err := io.ReadAll(resp.Body)
+	var issue Issue
+	json.Unmarshal(body, &issue)
+
+	if issue.Status.name != os.Getenv("BACKLOG_ISSUE_STATUS") {
+		fmt.Println("Status Error:", issue.Status.name)
+		return "Status Error:" + issue.Status.name
+	}
+	return "ok"
 }
 
 func slackNotification(event Event) (string, error) {
