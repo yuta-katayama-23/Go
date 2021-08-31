@@ -54,9 +54,11 @@ type Issue struct {
 }
 
 type Status struct {
-	id        string
-	projectId string
+	id        int
+	projectId int
 	name      string
+	// color        string
+	// displayOrder string
 }
 
 func HandleRequest(ctx context.Context, event Event) (string, error) {
@@ -118,7 +120,7 @@ func checkIssueStatus(issueKey string) string {
 	fmt.Println("")
 
 	body, err := io.ReadAll(resp.Body)
-	fmt.Println(body)
+	fmt.Println(string(body))
 
 	var issue Issue
 	json.Unmarshal(body, &issue)
