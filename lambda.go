@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -84,7 +85,12 @@ func HandleRequest(ctx context.Context, event Event) (string, error) {
 		fmt.Println("res", res)
 		fmt.Println("err", err)
 
-		return fmt.Sprintf("Build Sucess"), nil
+		updateResult := updateIssueStatus(event.IssueKey)
+		if updateResult != "ok" {
+			return fmt.Sprintf("Update Issue Status Error is %s.", updateResult), nil
+		}
+
+		return fmt.Sprintf("Build Sucess and Issue Status is Updated"), nil
 	} else {
 		return fmt.Sprintf("Error is %s.", checkResult), nil
 	}
@@ -124,6 +130,44 @@ func checkIssueStatus(issueKey string) string {
 		fmt.Println("Status Error:", issue.Status.Name)
 		return "Status Error:" + issue.Status.Name
 	}
+	return "ok"
+}
+
+func updateIssueStatus(issueKey string) string {
+	reqUrl := "https://" + os.Getenv("BACKLOG_DOMEIN") + ".backlog.com/api/v2/issues/" + issueKey + "?apiKey=" + os.Getenv("BACKLOG_API_KEY")
+	values := url.Values{}
+	values.Set("statusId", os.Getenv("BACKLOG_STATUS_ID"))
+
+	req, err := http.NewRequest(
+		"PATCH",
+		reqUrl,
+		strings.NewReader(values.Encode()),
+	)
+
+	if err != nil {
+		fmt.Println("NewRequest Error:", err)
+		return "NewRequest Error:" + err.Error()
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	client := new(http.Client)
+	resp, err := client.Do(req)
+
+	if err != nil {
+		fmt.Println("Request Error:", err)
+		return "Request Error:" + err.Error()
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		fmt.Println("Response Error:", resp.Status)
+		return "Response Error:" + resp.Status
+	}
+
+	body, _ := io.ReadAll(resp.Body)
+	fmt.Println(string(body))
+
 	return "ok"
 }
 
