@@ -50,15 +50,16 @@ type Detail struct {
 }
 
 type Issue struct {
+	Id     int    `json:"id"`
 	Status Status `json:"status"`
 }
 
 type Status struct {
-	id        int
-	projectId int
-	name      string
-	// color        string
-	// displayOrder string
+	id           int
+	projectId    int
+	name         string
+	color        string
+	displayOrder string
 }
 
 func HandleRequest(ctx context.Context, event Event) (string, error) {
@@ -103,7 +104,6 @@ func contains(s []string, e string) bool {
 
 func checkIssueStatus(issueKey string) string {
 	reqUrl := "https://" + os.Getenv("BACKLOG_DOMEIN") + ".backlog.com/api/v2/issues/" + issueKey + "?apiKey=" + os.Getenv("BACKLOG_API_KEY")
-
 	resp, err := http.Get(reqUrl)
 	if err != nil {
 		fmt.Println("Request Error:", err)
@@ -116,8 +116,6 @@ func checkIssueStatus(issueKey string) string {
 		fmt.Println("Response Error:", resp.Status)
 		return "Response Error:" + resp.Status
 	}
-	fmt.Printf("%-v", resp)
-	fmt.Println("")
 
 	body, err := io.ReadAll(resp.Body)
 	fmt.Println(string(body))
@@ -125,8 +123,9 @@ func checkIssueStatus(issueKey string) string {
 	var issue Issue
 	json.Unmarshal(body, &issue)
 
-	fmt.Println(issue.Status.name)
-	fmt.Println(issue.Status.id)
+	fmt.Println("issue.Id : ", issue.Id)
+	fmt.Println("issue.Status.name : ", issue.Status.name)
+	fmt.Println("issue.Status.id : ", issue.Status.id)
 
 	if issue.Status.name != os.Getenv("BACKLOG_ISSUE_STATUS") {
 		fmt.Println("Status Error:", issue.Status.name)
