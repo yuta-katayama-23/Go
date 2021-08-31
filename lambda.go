@@ -86,7 +86,7 @@ func HandleRequest(ctx context.Context, event Event) (string, error) {
 
 		return fmt.Sprintf("Build Sucess"), nil
 	} else {
-		return fmt.Sprintf("Error %s", checkResult), nil
+		return fmt.Sprintf("Error is %s.", checkResult), nil
 	}
 }
 
@@ -115,8 +115,11 @@ func checkIssueStatus(issueKey string) string {
 		return "Response Error:" + resp.Status
 	}
 	fmt.Printf("%-v", resp)
+	fmt.Println("")
 
 	body, err := io.ReadAll(resp.Body)
+	fmt.Println(resp.Body)
+
 	var issue Issue
 	json.Unmarshal(body, &issue)
 
