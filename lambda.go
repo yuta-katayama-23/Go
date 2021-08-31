@@ -100,11 +100,7 @@ func contains(s []string, e string) bool {
 }
 
 func checkIssueStatus(issueKey string) string {
-	fmt.Println(issueKey)
-
 	reqUrl := "https://" + os.Getenv("BACKLOG_DOMEIN") + ".backlog.com/api/v2/issues/" + issueKey + "?apiKey=" + os.Getenv("BACKLOG_API_KEY")
-
-	fmt.Println(reqUrl)
 
 	resp, err := http.Get(reqUrl)
 	if err != nil {
@@ -122,10 +118,13 @@ func checkIssueStatus(issueKey string) string {
 	fmt.Println("")
 
 	body, err := io.ReadAll(resp.Body)
-	fmt.Println(resp.Body)
+	fmt.Println(body)
 
 	var issue Issue
 	json.Unmarshal(body, &issue)
+
+	fmt.Println(issue.Status.name)
+	fmt.Println(issue.Status.id)
 
 	if issue.Status.name != os.Getenv("BACKLOG_ISSUE_STATUS") {
 		fmt.Println("Status Error:", issue.Status.name)
