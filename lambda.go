@@ -50,16 +50,13 @@ type Detail struct {
 }
 
 type Issue struct {
-	Id     int    `json:"id"`
 	Status Status `json:"status"`
 }
 
 type Status struct {
-	id           int
-	projectId    int
-	name         string
-	color        string
-	displayOrder int
+	Id        int
+	ProjectId int
+	Name      string
 }
 
 func HandleRequest(ctx context.Context, event Event) (string, error) {
@@ -123,13 +120,12 @@ func checkIssueStatus(issueKey string) string {
 	var issue Issue
 	json.Unmarshal(body, &issue)
 
-	fmt.Println("issue.Id : ", issue.Id)
-	fmt.Println("issue.Status.name : ", issue.Status.name)
-	fmt.Println("issue.Status.id : ", issue.Status.id)
+	fmt.Println("issue.Status.name : ", issue.Status.Name)
+	fmt.Println("issue.Status.id : ", issue.Status.Id)
 
-	if issue.Status.name != os.Getenv("BACKLOG_ISSUE_STATUS") {
-		fmt.Println("Status Error:", issue.Status.name)
-		return "Status Error:" + issue.Status.name
+	if issue.Status.Name != os.Getenv("BACKLOG_ISSUE_STATUS") {
+		fmt.Println("Status Error:", issue.Status.Name)
+		return "Status Error:" + issue.Status.Name
 	}
 	return "ok"
 }
