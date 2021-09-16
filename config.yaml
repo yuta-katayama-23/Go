@@ -1,0 +1,22 @@
+BuildRepositories:
+  - TargetEnv: dev
+    BuildProjects:
+      - ProjectName: hoge-dev0001
+        ModuleName: a0001
+
+      - ProjectName: hoge-a0002
+        ModuleName: a0002
+
+      - ProjectName: hoge-a0003
+        ModuleName: a0003
+
+  - TargetEnv: stg
+    BuildProjects:
+      - ProjectName: hoge-stg0001
+        ModuleName: a0001
+
+      - ProjectName: hoge-stg0002
+        ModuleName: a0002
+
+      - ProjectName: hoge-stg0003
+        ModuleName: a0003
