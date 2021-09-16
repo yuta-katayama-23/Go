@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  SamGoLambdaFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+      Handler: main
+      FunctionName: sam-go-lambda
+      Runtime: go1.x
+
+Outputs:
+  SamGoLambdaFunction:
+    Description: "Go Lambda Function ARN"
+    Value: !GetAtt SamGoLambdaFunction.Arn
+  SamGoLambdaFunctionIamRole:
+    Description: "Implicit IAM Role created for Go function"
+    Value: !GetAtt SamGoLambdaFunctionRole.Arn

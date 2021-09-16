@@ -30,3 +30,6 @@ main.zip
 
 # VS Code
 .vscode
+
+# AWS SAM
+.aws-sam
