@@ -33,13 +33,11 @@ type BuildProjects struct {
 }
 
 type Event struct {
-	// Slackからの実行用
 	Modules      []string `json:"Modules"`
 	SourceBranch string   `json:"SourceBranch"`
 	TargetEnv    string   `json:"TargetEnv"`
 	IssueKey     string   `json:"issueKey"`
 
-	// Cloud Watch Eventsからの実行用
 	Detail Detail `json:"detail"`
 }
 
