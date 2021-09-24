@@ -14,7 +14,7 @@ Resources:
       CodeUri: ./
       Handler: main
       FunctionName: sam-go-lambda
-      Description: AWS SAMで作成したGoのLambda関数
+      Description: Lambda function create by aws sam.
       Runtime: go1.x
       Policies:
         - Statement:
