@@ -21,4 +21,6 @@ jobs:
         run: go version        
 
       - name: Execute Go code
-        run: go run .
+        run: |
+          go run .
+          echo $LANG
