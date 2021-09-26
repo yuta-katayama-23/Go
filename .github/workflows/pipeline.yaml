@@ -5,7 +5,7 @@ on:
     branches: [sam]
 
 env:
-  ARTIFACTS_BUCKET: aws-sam-cli-managed-default-samclisourcebucket-1b0rpp4kbz6ml
+  ARTIFACTS_BUCKET: aws-sam-cli-managed-default-samclisourcebucket-jqifq82awfzk
 
 jobs:
   build-and-package:
