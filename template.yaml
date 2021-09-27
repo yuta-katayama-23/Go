@@ -16,6 +16,9 @@ Resources:
       FunctionName: sam-go-lambda
       Description: Lambda function create by aws sam.
       Runtime: go1.x
+      Environment:
+        Variables:
+          BACKLOG_ISSUE_STATUS: 未対応
       Policies:
         - Statement:
             - Sid: CodeCommitGetCommitPolicy
