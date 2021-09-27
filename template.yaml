@@ -61,7 +61,7 @@ Resources:
   libs:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: config.yaml
+      LayerName: config
       Description: Dependencies for config.yaml.
       ContentUri: ./
       CompatibleRuntimes:
