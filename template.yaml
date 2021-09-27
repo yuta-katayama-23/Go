@@ -64,8 +64,8 @@ Resources:
       LayerName: config
       Description: Dependencies for config.yaml.
       ContentUri: config/
-      # CompatibleRuntimes:
-      #   - go1.x
+      CompatibleRuntimes:
+        - go1.x
 
 Outputs:
   SamGoLambdaFunction:

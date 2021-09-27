@@ -59,7 +59,7 @@ type Status struct {
 }
 
 func HandleRequest(ctx context.Context, event Event) (string, error) {
-	configor.Load(&Config, "config/config.yaml")
+	configor.Load(&Config, "opt/config.yaml")
 
 	fmt.Println("Config", Config)
 
