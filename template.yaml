@@ -35,6 +35,8 @@ Resources:
           BACKLOG_STATUS_ID: 3
           SLACK_API_TOKEN: !Ref SlackApiToken
           SLACK_CHANNEL: "#lambda実行"
+      Layers:
+        - !Ref libs
       Policies:
         - Statement:
             - Sid: CodeCommitGetCommitPolicy
@@ -55,6 +57,15 @@ Resources:
               detail:
                 eventSource:
                   - codecommit.amazonaws.com
+
+  libs:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: config.yaml
+      Description: Dependencies for config.yaml.
+      ContentUri: ./
+      CompatibleRuntimes:
+        - go1.x
 
 Outputs:
   SamGoLambdaFunction:
