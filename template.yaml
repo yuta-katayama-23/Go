@@ -2,6 +2,11 @@ AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: SAM Template for sam-go-lambda
 
+Parameters:
+  BacklogApiKey:
+    Type: String
+    Description: Backlog api key.
+
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
@@ -18,6 +23,7 @@ Resources:
       Runtime: go1.x
       Environment:
         Variables:
+          BACKLOG_API_KEY: !Ref BacklogApiKey
           BACKLOG_ISSUE_STATUS: 未対応
       Policies:
         - Statement:
