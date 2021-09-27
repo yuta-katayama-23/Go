@@ -34,7 +34,7 @@ Resources:
           BACKLOG_ISSUE_STATUS: 未対応
           BACKLOG_STATUS_ID: 3
           SLACK_API_TOKEN: !Ref SlackApiToken
-          SLACK_CHANNEL: #lambda実行
+          SLACK_CHANNEL: "#lambda実行"
       Policies:
         - Statement:
             - Sid: CodeCommitGetCommitPolicy
