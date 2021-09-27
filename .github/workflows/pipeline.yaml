@@ -59,6 +59,6 @@ jobs:
         run: |
           sam deploy \
             --template packaged-template.yaml \
-            --parameter-overrides BacklogApiKey=${{ secrets.BACKLOG_API_KEY }}
+            --parameter-overrides BacklogApiKey=${{ secrets.BACKLOG_API_KEY }} BacklogDomein=${{ secrets.BACKLOG_DOMEIN }} SlackApiToken=${{ secrets.SLACK_API_TOKEN }} \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset
