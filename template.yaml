@@ -1,13 +1,35 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: The AWS CloudFormation template for cloudformation-go-lambda
 
+Parameters:
+  BacklogApiKey:
+    Type: String
+    Description: Backlog api key.
+  BacklogDomein:
+    Type: String
+    Description: Backlog domein.
+  SlackApiToken:
+    Type: String
+    Description: Slack api token.
+
 Resources:
   CloudFormationGoLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Code: ./
+      Code: ./main.zip
+      Description: Lambda function create by aws cloudformation.
       Handler: main
+      FunctionName: cloudformation-go-lambda
       Runtime: go1.x
+      Timeout: 3
+      Environment:
+        Variables:
+          BACKLOG_API_KEY: !Ref BacklogApiKey
+          BACKLOG_DOMEIN: !Ref BacklogDomein
+          BACKLOG_ISSUE_STATUS: 未対応
+          BACKLOG_STATUS_ID: 3
+          SLACK_API_TOKEN: !Ref SlackApiToken
+          SLACK_CHANNEL: "#lambda実行"
       Role: !GetAtt SamGoLambdaFunctionRole.Arn
 
   SamGoLambdaFunctionRole:
