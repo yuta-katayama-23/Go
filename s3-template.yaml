@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: The AWS CloudFormation template for artifact S3 Bucket of cloudformation-go-lambda
+
+Parameters:
+  UserName:
+    Type: String
+    Description: AWS user name.
+
+Resources:
+  ArtifactBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: aws-cloudformation-build-artifact-go-lambda
+      VersioningConfiguration:
+        Status: Enabled
+
+  ArtifactBucketBucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "s3:GetObject"
+            Effect: Allow
+            Resource: !Join
+              - ""
+              - - "arn:"
+                - !Ref "AWS::Partition"
+                - ":s3:::"
+                - !Ref ArtifactBucket
+                - /*
+            Principal:
+              AWS: !Join
+                - ""
+                - - !Sub arn:aws:iam::${AWS::AccountId}:user/
+                  - !Ref UserName
+      Bucket: !Ref ArtifactBucket
+
+Outputs:
+  BucketName:
+    Description: Bucket for Lmabda build artifact.
+    Value: !GetAtt ArtifactBucket.Arn
