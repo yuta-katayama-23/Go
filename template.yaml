@@ -58,6 +58,29 @@ Resources:
                 Sid: CodeCommit
       Path: /service-role/
 
+  GoLambdaFunctionCodeCommitPushPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      Principal: events.amazonaws.com
+      FunctionName: !Ref GoLambdaFunction
+      SourceArn: !GetAtt GoLambdaFunctionCodeCommitPush.Arn
+
+  GoLambdaFunctionCodeCommitPush:
+    Type: "AWS::Events::Rule"
+    Properties:
+      EventPattern:
+        source:
+          - aws.codecommit
+        detail:
+          eventSource:
+            - codecommit.amazonaws.com
+        detail-type:
+          - CodeCommit Repository State Change
+      Targets:
+        - Id: GoLambdaFunctionCodeCommitPushLambdaTarget
+          Arn: !GetAtt GoLambdaFunction.Arn
+
 Outputs:
   GoLambdaFunction:
     Description: "Go Lambda Function ARN"
@@ -65,3 +88,6 @@ Outputs:
   GoLambdaFunctionIamRole:
     Description: "Implicit IAM Role created for Go function"
     Value: !GetAtt GoLambdaFunctionRole.Arn
+  GoLambdaFunctionCodeCommitPush:
+    Description: Cloud Watch Events for Go function. Triger is Code Commit push.
+    Value: !GetAtt GoLambdaFunctionCodeCommitPush.Arn
