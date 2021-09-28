@@ -5,9 +5,7 @@ Resources:
   CloudFormationGoLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      Code:
-        S3Bucket: aws-cloudformation-build-artifact-go-lambda
-        S3Key: main.zip
+      Code: ./
       Handler: main
       Runtime: go1.x
       Role: !GetAtt SamGoLambdaFunctionRole.Arn
