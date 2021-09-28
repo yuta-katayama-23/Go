@@ -13,7 +13,7 @@ Parameters:
     Description: Slack api token.
 
 Resources:
-  CloudFormationGoLambdaFunction:
+  GoLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       Code: ./main.zip
@@ -30,9 +30,9 @@ Resources:
           BACKLOG_STATUS_ID: 3
           SLACK_API_TOKEN: !Ref SlackApiToken
           SLACK_CHANNEL: "#lambda実行"
-      Role: !GetAtt SamGoLambdaFunctionRole.Arn
+      Role: !GetAtt GoLambdaFunctionRole.Arn
 
-  SamGoLambdaFunctionRole:
+  GoLambdaFunctionRole:
     Type: "AWS::IAM::Role"
     Properties:
       AssumeRolePolicyDocument:
@@ -47,7 +47,7 @@ Resources:
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
       Policies:
-        - PolicyName: SamGoLambdaFunctionRolePolicy-CodeCommit
+        - PolicyName: CloudFormationGoLambdaFunctionRolePolicy-CodeCommit
           PolicyDocument:
             Statement:
               - Action:
@@ -55,4 +55,13 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:codecommit:ap-northeast-1:${AWS::AccountId}:*"
                 Effect: Allow
-                Sid: CodeCommitGetCommitPolicy
+                Sid: CodeCommit
+      Path: /service-role/
+
+Outputs:
+  GoLambdaFunction:
+    Description: "Go Lambda Function ARN"
+    Value: !GetAtt GoLambdaFunction.Arn
+  GoLambdaFunctionIamRole:
+    Description: "Implicit IAM Role created for Go function"
+    Value: !GetAtt GoLambdaFunctionRole.Arn
