@@ -39,18 +39,17 @@ jobs:
           aws cloudformation package \
             --template-file template.yaml \
             --s3-bucket ${ARTIFACTS_BUCKET} \
-            --output-template-file packaged-template.yml
+            --output-template-file packaged-template.yaml
 
       - uses: actions/upload-artifact@v2
         with:
-          name: packaged-template.yml
-          path: packaged-template.yml
+          name: packaged-template.yaml
+          path: packaged-template.yaml
 
   deploy:
     needs: [build-and-package]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         with:
           name: packaged-template.yaml
@@ -65,7 +64,7 @@ jobs:
       - name: Cloudformation deploy
         run: |
           aws cloudformation deploy \
-            --template-file packaged-template.yml \
+            --template-file packaged-template.yaml \
             --stack-name cloudformation-go-lambda \
             --capabilities CAPABILITY_IAM \
             --parameter-overrides BacklogApiKey=${{ secrets.BACKLOG_API_KEY }} BacklogDomein=${{ secrets.BACKLOG_DOMEIN }} SlackApiToken=${{ secrets.SLACK_API_TOKEN }}
