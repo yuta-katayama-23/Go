@@ -15,6 +15,22 @@ provider "aws" {
 
 variable "user_name" {}
 
+resource "aws_s3_bucket" "s3_bucket" {
+  bucket = "terraform-build-artifact-go-lambda"
+}
+
+resource "aws_s3_bucket_policy" "policy" {
+  bucket = aws_s3_bucket.s3_bucket.id
+  policy = data.aws_iam_policy_document.policy_doc.json
+}
+
+resource "aws_s3_bucket_object" "build_artifact" {
+  bucket = aws_s3_bucket.s3_bucket.id
+  key    = "main.zip"
+  source = "${path.module}/../../main.zip"
+  etag   = filemd5("${path.module}/../../main.zip")
+}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "policy_doc" {
@@ -36,13 +52,4 @@ data "aws_iam_policy_document" "policy_doc" {
       "${aws_s3_bucket.s3_bucket.arn}/*"
     ]
   }
-}
-
-resource "aws_s3_bucket" "s3_bucket" {
-  bucket = "terraform-build-artifact-go-lambda"
-}
-
-resource "aws_s3_bucket_policy" "policy" {
-  bucket = aws_s3_bucket.s3_bucket.id
-  policy = data.aws_iam_policy_document.policy_doc.json
 }
