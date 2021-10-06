@@ -7,6 +7,14 @@ terraform {
   }
 
   required_version = ">= 0.14.9"
+
+  backend "remote" {
+    organization = "yuta_katayama"
+
+    workspaces {
+      name = "terraform-go-lambda-cicd"
+    }
+  }
 }
 
 provider "aws" {
