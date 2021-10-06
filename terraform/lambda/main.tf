@@ -146,3 +146,15 @@ data "aws_s3_bucket_object" "build_artifact" {
 }
 
 data "aws_caller_identity" "current" {}
+
+output "go_lambda_function_arn" {
+  value = aws_lambda_function.go-lambda.arn
+}
+
+output "implicit_ima_role_created_for_go_function" {
+  value = aws_iam_role.iam_for_lambda.arn
+}
+
+output "cloud_watch_events_for_go_function" {
+  value = aws_cloudwatch_event_rule.codecommit_push.arn
+}
