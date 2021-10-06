@@ -38,7 +38,8 @@ jobs:
           terraform fmt -check
           terraform init
           terraform validate -no-color
-          terraform apply -auto-approve
+          terraform apply -auto-approve \
+            -var "user_name=${{ secrets.USER_NAME }}"
 
       - name: Upload base64sha256 to artifact buckets
         run: |
