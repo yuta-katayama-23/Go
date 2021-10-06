@@ -1,0 +1,66 @@
+name: lambda-build-deploy-with-terraform
+
+on:
+  push:
+    branches: [terraform]
+
+env:
+  ARTIFACTS_BUCKET: aws-cloudformation-build-artifact-go-lambda
+
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v2.1.3
+        with:
+          go-version: "1.17.1"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Go get aws lambda library
+        run: go get github.com/aws/aws-lambda-go/lambda
+
+      - name: Go build
+        run: GOOS=linux go build -o main lambda.go
+
+      - name: Create zip
+        run: zip main.zip main config.yaml
+
+      - name: Upload artifacts to artifact buckets
+        run: |
+          cd terraform/s3bucket
+          terraform fmt -check
+          terraform init
+          terraform validate -no-color
+          terraform apply -auto-approve
+
+      - name: Upload base64sha256 to artifact buckets
+        run: |
+          ls -al
+          openssl dgst -sha256 -binary main.zip | openssl enc -base64 | tr -d "\n" > main.zip.base64sha256
+          aws s3 cp --content-type text/plain main.zip.base64sha256 s3://terraform-build-artifact-go-lambda
+
+  deploy:
+    needs: [build-and-package]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform deploy(apply)
+        run: |
+          terraform fmt -check
+          terraform init
+          terraform validate -no-color
+          terraform apply -auto-approve \
+            -var "backlog_api_key=${{ secrets.BACKLOG_API_KEY }}" "backlog_domain=${{ secrets.BACKLOG_DOMEIN }}" "slack_api_token=${{ secrets.SLACK_API_TOKEN }}"
