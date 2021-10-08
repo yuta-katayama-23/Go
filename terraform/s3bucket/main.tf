@@ -21,7 +21,7 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
-variable "username" {}
+variable "user_name" {}
 
 resource "aws_s3_bucket" "s3_bucket" {
   bucket = "terraform-build-artifact-go-lambda"
@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "policy_doc" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${var.username}"]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${var.user_name}"]
     }
 
     actions = [
