@@ -38,8 +38,7 @@ jobs:
           terraform fmt -check
           terraform init
           terraform validate -no-color
-          terraform apply -auto-approve \
-            -var "user_name=${{ secrets.USER_NAME }}"
+          terraform apply -auto-approve
 
       - name: Upload base64sha256 to artifact buckets
         run: |
@@ -63,5 +62,4 @@ jobs:
           terraform fmt -check
           terraform init
           terraform validate -no-color
-          terraform apply -auto-approve \
-            -var "backlog_api_key=${{ secrets.BACKLOG_API_KEY }}" "backlog_domain=${{ secrets.BACKLOG_DOMEIN }}" "slack_api_token=${{ secrets.SLACK_API_TOKEN }}"
+          terraform apply -auto-approve
