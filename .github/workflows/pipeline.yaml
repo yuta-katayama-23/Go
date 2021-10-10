@@ -67,6 +67,7 @@ jobs:
 
       - name: Terraform deploy(apply)
         run: |
+          cd terraform/lambda
           terraform fmt -check
           terraform init
           terraform validate -no-color
