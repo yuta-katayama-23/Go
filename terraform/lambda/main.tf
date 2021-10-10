@@ -12,7 +12,7 @@ terraform {
     organization = "yuta_katayama"
 
     workspaces {
-      name = "terraform-go-lambda-cicd"
+      name = "terraform-go-lambda-cicd-lambda"
     }
   }
 }

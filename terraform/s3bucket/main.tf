@@ -12,7 +12,7 @@ terraform {
     organization = "yuta_katayama"
 
     workspaces {
-      name = "terraform-go-lambda-cicd"
+      name = "terraform-go-lambda-cicd-s3bucket"
     }
   }
 }
@@ -37,6 +37,13 @@ resource "aws_s3_bucket_object" "build_artifact" {
   key    = "main.zip"
   source = "${path.module}/main.zip"
   etag   = filemd5("${path.module}/main.zip")
+}
+
+resource "aws_s3_bucket_object" "base64sha256" {
+  bucket = aws_s3_bucket.s3_bucket.id
+  key    = "main.zip.base64sha256"
+  source = "${path.module}/main.zip.base64sha256"
+  etag   = filemd5("${path.module}/main.zip.base64sha256")
 }
 
 data "aws_caller_identity" "current" {}

@@ -5,7 +5,7 @@ on:
     branches: [terraform]
 
 env:
-  ARTIFACTS_BUCKET: aws-cloudformation-build-artifact-go-lambda
+  AWS_ACCOUNT_ID: ${{ secrets.TF_API_TOKEN }}
 
 jobs:
   build-and-package:
@@ -17,13 +17,6 @@ jobs:
         uses: actions/setup-go@v2.1.3
         with:
           go-version: "1.17.1"
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -41,6 +34,11 @@ jobs:
           zip main.zip main config.yaml
           cp main.zip terraform/s3bucket/main.zip
 
+      - name: Create base64sha256 and cp to terraform configure directory(terraform working directory)
+        run: |
+          openssl dgst -sha256 -binary main.zip | openssl enc -base64 | tr -d "\n" > main.zip.base64sha256
+          cp main.zip.base64sha256 terraform/s3bucket/main.zip.base64sha256
+
       - name: Upload artifacts to artifact buckets
         run: |
           cd terraform/s3bucket
@@ -48,11 +46,6 @@ jobs:
           terraform init
           terraform validate -no-color
           terraform apply -auto-approve
-
-      - name: Upload base64sha256 to artifact buckets
-        run: |
-          openssl dgst -sha256 -binary main.zip | openssl enc -base64 | tr -d "\n" > main.zip.base64sha256
-          aws s3 cp --content-type text/plain main.zip.base64sha256 s3://terraform-build-artifact-go-lambda
 
   deploy:
     needs: [build-and-package]
