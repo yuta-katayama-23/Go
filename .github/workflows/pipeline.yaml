@@ -29,8 +29,10 @@ jobs:
       - name: Go build
         run: GOOS=linux go build -o main lambda.go
 
-      - name: Create zip
-        run: zip main.zip main config.yaml
+      - name: Create zip and cp to terraform configure directory(terraform working directory)
+        run: |
+          zip main.zip main config.yaml
+          cp main.zip terraform/s3bucket/main.zip
 
       - name: Upload artifacts to artifact buckets
         run: |
