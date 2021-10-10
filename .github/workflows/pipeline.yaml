@@ -4,9 +4,6 @@ on:
   push:
     branches: [terraform]
 
-env:
-  AWS_ACCOUNT_ID: ${{ secrets.TF_API_TOKEN }}
-
 jobs:
   build-and-package:
     runs-on: ubuntu-latest
