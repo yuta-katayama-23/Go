@@ -6,7 +6,7 @@ terraform {
     }
   }
 
-  required_version = ">= 0.14.9"
+  required_version = ">= 1.0.8"
 
   backend "remote" {
     organization = "yuta_katayama"
@@ -35,8 +35,8 @@ resource "aws_s3_bucket_policy" "policy" {
 resource "aws_s3_bucket_object" "build_artifact" {
   bucket = aws_s3_bucket.s3_bucket.id
   key    = "main.zip"
-  source = "${path.module}/../../main.zip"
-  etag   = filemd5("${path.module}/../../main.zip")
+  source = "~/Go/main.zip"
+  etag   = filemd5("~/Go/main.zip")
 }
 
 data "aws_caller_identity" "current" {}
