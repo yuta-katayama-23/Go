@@ -42,7 +42,7 @@ jobs:
           terraform fmt -check
           terraform init
           terraform validate -no-color
-          terraform apply -auto-approve
+          terraform apply -auto-approve > /dev/null
 
   deploy:
     needs: [build-and-package]
@@ -61,4 +61,4 @@ jobs:
           terraform fmt -check
           terraform init
           terraform validate -no-color
-          terraform apply -auto-approve
+          terraform apply -auto-approve > /dev/null
